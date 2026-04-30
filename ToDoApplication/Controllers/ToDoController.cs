@@ -47,4 +47,28 @@ public class ToDoController : ControllerBase
         return Ok();
     }
 
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Update(int id, UpdateToDoItem item)
+    {
+        var itemToBeUpdated = await _context.GetByIdAsync(id);
+        if (itemToBeUpdated == null)
+            return NotFound();
+
+        itemToBeUpdated.Description = item.Description;
+        itemToBeUpdated.IsDone = item.IsDone;
+
+        await _context.UpdateAsync(itemToBeUpdated);
+
+        return Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var deleted = await _context.DeleteAsync(id);
+        if (!deleted)
+            return BadRequest();
+
+        return Ok();
+    }
 }
